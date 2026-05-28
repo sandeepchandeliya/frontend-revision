@@ -9,3 +9,13 @@ console.log(`${hero} is so cool!`);
 let errorMessage = 'an error \n' + 'occurred';
 
 console.log(errorMessage);
+
+//BOOLEANS
+// true /false
+
+//OBJECTS
+let obj = {name:"max" ,age:31};
+
+//ARRAYS
+const arr = [1,34,5];
+console.log(arr);
