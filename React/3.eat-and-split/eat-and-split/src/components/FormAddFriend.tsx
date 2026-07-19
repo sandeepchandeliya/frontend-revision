@@ -1,6 +1,11 @@
 import { useState, type SyntheticEvent } from 'react';
+import type { FriendsType } from '../types';
 
-export default function FormAddFriend() {
+interface FormAddFriendProp {
+  onAddFriends: (friend: FriendsType) => void;
+}
+
+export default function FormAddFriend({ onAddFriends }: FormAddFriendProp) {
   const [name, setName] = useState('');
   const [image, setImage] = useState('https://i.pravatar.cc/48');
 
@@ -8,14 +13,14 @@ export default function FormAddFriend() {
     e.preventDefault();
 
     if (!name || !image) return;
-    const id = crypto.randomUUID();
+    const id = +crypto.randomUUID();
     const newFriend = {
       id,
       name,
       image: `${image}?=${id}`,
       balance: 0,
     };
-    console.log(newFriend);
+    onAddFriends(newFriend);
     setName('');
     setImage('https://i.pravatar.cc/48');
   }
