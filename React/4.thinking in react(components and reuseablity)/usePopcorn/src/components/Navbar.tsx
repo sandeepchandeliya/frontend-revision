@@ -1,9 +1,12 @@
+import type { Movie } from '../types';
+
 interface NavbarProp {
   query: string;
   setQuery: (val: string) => void;
+  movies: Movie[];
 }
 
-export default function Navbar({ query, setQuery }: NavbarProp) {
+export default function Navbar({ query, setQuery, movies }: NavbarProp) {
   return (
     <>
       <nav className="nav-bar">
@@ -19,7 +22,7 @@ export default function Navbar({ query, setQuery }: NavbarProp) {
           onChange={(e) => setQuery(e.target.value)}
         />
         <p className="num-results">
-          Found <strong>X</strong> results
+          Found <strong>{movies.length}</strong> results
         </p>
       </nav>
     </>

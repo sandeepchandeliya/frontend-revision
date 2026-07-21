@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import Navbar from './components/Navbar';
 import { tempWatchedData, tempMovieData } from './data';
+import type { MainProp } from './types';
 
-function Main() {
-  const [movies, setMovies] = useState(tempMovieData);
+
+
+function Main({movies}:MainProp) {
   const [watched, setWatched] = useState(tempWatchedData);
   const [isOpen1, setIsOpen1] = useState(true);
   const [isOpen2, setIsOpen2] = useState(true);
@@ -104,11 +106,12 @@ function Main() {
 
 export default function App() {
   const [query, setQuery] = useState('');
+  const [movies, setMovies] = useState(tempMovieData);
 
   return (
     <>
-      <Navbar query={query} setQuery={setQuery} />
-      <Main />
+      <Navbar query={query} setQuery={setQuery} movies={movies} />
+      <Main movies= {movies}/>
     </>
   );
 }
