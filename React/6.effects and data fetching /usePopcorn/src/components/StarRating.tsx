@@ -17,17 +17,20 @@ export default function StarRating({
   color = '#fcc419',
   size = 48,
   message = [],
+  onSetRating,
 }: {
   maxRating?: number;
   color?: string;
   size?: number;
   message?: string[];
+  onSetRating: (rating: number) => void;
 }) {
   const [rating, setRating] = useState(0);
   const [tempRating, setTempRating] = useState(0);
 
   function handleRating(rating: number) {
     setRating(rating);
+    onSetRating(rating)
   }
 
   const textStyle = {
