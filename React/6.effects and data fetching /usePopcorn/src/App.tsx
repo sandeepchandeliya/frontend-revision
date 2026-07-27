@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Navbar from './components/Navbar';
-import { type Movie, type MainProp, type WatchedMovie } from './types';
+import { type MainProp, type WatchedMovie } from './types';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
 import SelectedMovie from './components/SelectedMovie';
+import { useMovies } from './components/useMovies';
+import { useLocalStorageState } from './components/useLocalStoageState';
 
 function Main({
   movies,
@@ -83,11 +85,11 @@ function Main({
                     </p>
                     <p>
                       <span>🌟</span>
-                      <span>{avgUserRating}</span>
+                      <span>{avgUserRating.toFixed(2)}</span>
                     </p>
                     <p>
                       <span>⏳</span>
-                      <span>{avgRuntime} min</span>
+                      <span>{avgRuntime.toFixed(2)} min</span>
                     </p>
                   </div>
                 </div>
@@ -128,15 +130,22 @@ function Main({
     </>
   );
 }
-const KEY = '1f7cc905';
 
 export default function App() {
-  const [watched, setWatched] = useState<WatchedMovie[]>([]);
-  const [query, setQuery] = useState('');
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  // const [movies, setMovies] = useState<Movie[]>([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState('');
+  
+  // const [watched, setWatched] = useState<WatchedMovie[]>([]);
+  // const [watched, setWatched] = useState<WatchedMovie[]>(function () {
+    //   const storedValue = localStorage.getItem('watched');
+    //   if (!storedValue) return [];
+    //   return JSON.parse(storedValue);
+    //   // return JSON.parse(localStorage.getItem("watched") ?? "[]");
+    // });
+    const [query, setQuery] = useState('');
+    const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [watched, setWatched] = useLocalStorageState([], 'watched');
 
   function handleAddWatched(movie: WatchedMovie) {
     setWatched((watched) => [...watched, movie]);
@@ -153,55 +162,8 @@ export default function App() {
     setSelectedId(null);
   }
 
-  useEffect(
-    function () {
-      const controller = new AbortController();
-      async function FetchMovies() {
-        try {
-          setIsLoading(true);
-          setError('');
-
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            { signal: controller.signal },
-          );
-          if (!res.ok) {
-            throw new Error('Something went wrong fetching movies data.');
-          }
-          const data = await res.json();
-          if (data.Response === 'False') {
-            throw new Error('Movie not found!');
-          }
-          setMovies(data.Search);
-          // console.log(data);
-        } catch (err) {
-          if (err instanceof Error) {
-            // console.error(err.message);
-            if (err.name !== 'AbortError') {
-              setError(err.message);
-            }
-          } else {
-            setError('Something went wrong');
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      // if (query.length < 3) {
-      //   setMovies([]);
-      //   setError('');
-      //   return;
-      // }
-      // handleCloseMovie()
-      FetchMovies();
-
-      return function () {
-        controller.abort();
-      };
-    },
-    [query],
-  );
+  // Custom hook
+  const { movies, isLoading, error } = useMovies(query);
 
   // useEffect(function () {
   //   fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=inception`)

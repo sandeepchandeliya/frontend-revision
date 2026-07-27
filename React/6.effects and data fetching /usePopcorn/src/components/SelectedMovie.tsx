@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import StarRating from './StarRating';
 import Loader from './Loader';
 import type { MovieDetails, WatchedMovie } from '../types';
+import { useKey } from './useKey';
 
 const KEY = '1f7cc905';
 export default function SelectedMovie({
@@ -23,6 +24,15 @@ export default function SelectedMovie({
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedId,
   )?.userRating;
+
+  const countRef = useRef(0);
+  // how many time user clicks while rating
+  useEffect(
+    function () {
+      if (userRating) countRef.current = countRef.current + 1;
+    },
+    [userRating],
+  );
 
   useEffect(
     function () {
@@ -63,27 +73,31 @@ export default function SelectedMovie({
       imdbRating: +imdbRating,
       runtime: Number(runtime.split(' ').at(0)),
       userRating,
+      countRating: countRef.current,
     };
     onWatched(newWatchedMovie);
     onCloseMovie();
   }
 
-  useEffect(
-    function () {
-      function callBack(e: KeyboardEvent) {
-        if (e.code === 'Escape') {
-          onCloseMovie();
-        }
-      }
-      document.addEventListener('keydown', callBack);
+  useKey('Escape', onCloseMovie);
 
-      //clean up
-      return function () {
-        document.removeEventListener('keydown', callBack);
-      };
-    },
-    [onCloseMovie],
-  );
+  // useEffect(
+  //   function () {
+  //     function callBack(e: KeyboardEvent) {
+  //       if (e.code === 'Escape') {
+  //         onCloseMovie();
+  //       }
+  //     }
+  //     document.addEventListener('keydown', callBack);
+
+  //     //clean up
+  //     return function () {
+  //       document.removeEventListener('keydown', callBack);
+  //     };
+  //   },
+  //   [onCloseMovie],
+  // );
+
   if (!movie) return null;
   const {
     Title: title,
