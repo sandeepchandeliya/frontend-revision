@@ -1,3 +1,5 @@
+import type { Dispatch } from 'react';
+
 export interface Questions {
   question: string;
   options: string[];
@@ -12,9 +14,23 @@ export interface State {
   status: Status;
   index: number;
   answer: null | number;
+  points: number;
 }
 
 export type Action =
   | { type: 'dataReceived'; payload: Questions[] }
   | { type: 'dataFailed' }
-  | { type: 'start' };
+  | { type: 'start' }
+  | { type: 'newAnswer'; payload: number | null }
+  | { type: 'nextQuestion'};
+
+export interface QuestionProps {
+  question: { question: string; options: string[]; correctOption: number };
+  dispatch: Dispatch<Action>;
+  answer: number | null;
+}
+
+export interface NextButtonProps {
+  dispatch: Dispatch<Action>;
+  answer: number | null;
+}
