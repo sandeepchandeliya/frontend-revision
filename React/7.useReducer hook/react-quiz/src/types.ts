@@ -15,6 +15,8 @@ export interface State {
   index: number;
   answer: null | number;
   points: number;
+  highscore: number;
+  secondsRemaining: number;
 }
 
 export type Action =
@@ -22,7 +24,10 @@ export type Action =
   | { type: 'dataFailed' }
   | { type: 'start' }
   | { type: 'newAnswer'; payload: number | null }
-  | { type: 'nextQuestion'};
+  | { type: 'nextQuestion' }
+  | { type: 'finish' }
+  | { type: 'restart' }
+  | { type: 'tick' };
 
 export interface QuestionProps {
   question: { question: string; options: string[]; correctOption: number };
@@ -33,4 +38,6 @@ export interface QuestionProps {
 export interface NextButtonProps {
   dispatch: Dispatch<Action>;
   answer: number | null;
+  index: number;
+  numQuestions: number;
 }
