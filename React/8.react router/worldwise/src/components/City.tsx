@@ -31,7 +31,7 @@ function City() {
     function () {
       if (id) getCity(id);
     },
-    [id],
+    [id,getCity],
   );
 
   if (!currentCity) return <p>Loading...</p>;
