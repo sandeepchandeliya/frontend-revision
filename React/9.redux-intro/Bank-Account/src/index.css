@@ -43,10 +43,11 @@ button {
   position: absolute;
   top: 40px;
   right: 40px;
-  background-color: #f7f7f7;
+  background-color: #FFD1D1;
   padding: 24px 32px;
   font-weight: bold;
   font-size: 32px;
   min-width: 180px;
   text-align: center;
+  
 }
